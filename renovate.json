@@ -1,0 +1,50 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":enableVulnerabilityAlertsWithLabel(security)"
+  ],
+  "timezone": "Europe/Paris",
+  "schedule": [
+    "before 6am on Monday"
+  ],
+  "labels": [
+    "dependencies"
+  ],
+  "packageRules": [
+    {
+      "matchManagers": ["dockerfile", "docker-compose"],
+      "groupName": "Docker images",
+      "labels": ["dependencies", "docker"]
+    },
+    {
+      "matchManagers": ["pep621"],
+      "groupName": "Python dependencies",
+      "labels": ["dependencies", "python"]
+    },
+    {
+      "matchManagers": ["pre-commit"],
+      "groupName": "Pre-commit hooks",
+      "labels": ["dependencies", "pre-commit"]
+    }
+  ],
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "labels": ["security", "vulnerability"]
+  },
+  "osvVulnerabilityAlerts": true,
+  "prHourlyLimit": 2,
+  "prConcurrentLimit": 5,
+  "branchConcurrentLimit": 10,
+  "semanticCommits": "enabled",
+  "commitMessagePrefix": "deps:",
+  "commitMessageAction": "update",
+  "commitMessageTopic": "{{depName}}",
+  "commitMessageExtra": "to v{{newVersion}}",
+  "ignorePaths": [
+    "alembic/**"
+  ],
+  "assignees": [
+    "bapt-dbn"
+  ]
+}
