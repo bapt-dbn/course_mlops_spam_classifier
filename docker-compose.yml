@@ -14,6 +14,7 @@ services:
       CML_DB_USER: postgres
       CML_DB_PASSWORD: password
       CML_DB_NAME: postgres
+      CML_FAIL_FAST: "false"
     depends_on:
       mlflow:
         condition: service_healthy
