@@ -6,6 +6,10 @@ A complete MLOps pipeline built around a spam classifier: training, experiment t
 
 > The course materials have been sent to your university supervisor and should be available on the platform.
 
+## Dataset
+
+The dataset used for training (`data/spam.csv`) is the [SMS Spam Collection Dataset](https://www.kaggle.com/datasets/uciml/sms-spam-collection-dataset) from Kaggle. It contains 5,574 SMS messages labeled as spam or ham (legitimate).
+
 ## Questions
 
 If you have questions about the code, architecture, or a concept, feel free to **open an issue**. I encourage you to prefer this approach over email:
