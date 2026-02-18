@@ -1,0 +1,97 @@
+api:
+  replicas: 1
+  image:
+    repository: ghcr.io/bapt-dbn/course-mlops
+    tag: ""
+    pullPolicy: IfNotPresent
+  service:
+    port: 8000
+    targetPort: 8000
+  resources:
+    # Limits equal requests to guarantee a "Guaranteed" QoS class.
+    # This prevents CPU throttling and OOM kills from burstable limits,
+    # and ensures the pod won't be evicted under node memory pressure.
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 500m
+      memory: 512Mi
+  env:
+    failFast: "false"
+    modelStrategy: "latest"
+    logLevel: "INFO"
+    logFormat: "json"
+    db: {}
+  startupProbe:
+    periodSeconds: 5
+    timeoutSeconds: 2
+    failureThreshold: 12
+  readinessProbe:
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    timeoutSeconds: 2
+    failureThreshold: 3
+  livenessProbe:
+    initialDelaySeconds: 5
+    periodSeconds: 15
+    timeoutSeconds: 2
+    failureThreshold: 3
+  nodeSelector: {}
+
+postgresql:
+  enabled: true
+  instances: 1
+  imageName: "ghcr.io/cloudnative-pg/postgresql:17"
+  database: mlflow
+  owner: mlflow
+  storage:
+    size: 2Gi
+
+mlflow:
+  service:
+    port: 5001
+    containerPort: 5001
+  backendStore:
+    databaseMigration: true
+    databaseConnectionCheck: true
+    postgres:
+      enabled: true
+      host: "course-mlops-postgresql-rw"
+      port: 5432
+      database: "mlflow"
+      user: "mlflow"
+      password: ""
+      driver: "psycopg2"
+    existingDatabaseSecret:
+      name: "course-mlops-postgresql-app"
+      usernameKey: "username"
+      passwordKey: "password"
+  artifactRoot:
+    s3:
+      enabled: true
+      bucket: "mlflow"
+  log:
+    enabled: false
+  extraFlags:
+    - disableSecurityMiddleware
+  extraEnvVars:
+    MLFLOW_S3_ENDPOINT_URL: "http://course-mlops-minio:9000"
+    AWS_ACCESS_KEY_ID: "minio"
+    AWS_SECRET_ACCESS_KEY: "minio-secret"
+
+minio:
+  enabled: true
+  mode: standalone
+  rootUser: "minio"
+  rootPassword: "minio-secret"
+  buckets:
+    - name: mlflow
+      policy: none
+      purge: false
+  persistence:
+    enabled: true
+    size: 5Gi
+  resources:
+    requests:
+      memory: 256Mi

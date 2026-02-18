@@ -1,0 +1,36 @@
+data:
+  path: "data/spam.csv"
+  test_size: 0.2
+  random_state: 42
+
+features:
+  tfidf:
+    max_features: 5000
+    ngram_range: [1, 2]
+    min_df: 2
+    max_df: 0.95
+
+  numerical:
+    - text_length
+    - word_count
+    - caps_ratio
+    - special_chars_count
+
+model:
+  type: "logistic_regression"
+  params:
+    C: 0.5
+    max_iter: 1000
+    solver: "liblinear"
+    penalty: "l2"
+
+mlflow:
+  tracking_uri: "./mlruns"
+  experiment_name: "spam-classifier"
+  registered_model_name: "spam-classifier"
+
+confidence_thresholds:
+  high_min: 0.9
+  high_max: 0.1
+  medium_min: 0.7
+  medium_max: 0.3

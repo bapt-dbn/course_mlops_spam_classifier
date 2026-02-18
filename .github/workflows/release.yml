@@ -1,0 +1,36 @@
+name: Bump version
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+permissions:
+  contents: write
+  pull-requests: write
+jobs:
+  bump-version:
+    if: github.event.pull_request.merged == true && !startsWith(github.event.pull_request.title, 'bump:')
+    runs-on: ubuntu-latest
+    name: "Prepare release"
+    steps:
+      - name: Check out
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Create bump and changelog
+        id: cz
+        uses: commitizen-tools/commitizen-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          commit: false
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v8
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "bump: version ${{ steps.cz.outputs.version }}"
+          title: "bump: version ${{ steps.cz.outputs.version }}"
+          body: |
+            Pull request automatically created by commitizen.
+          branch: "version-bump"
+          base: "main"
+          delete-branch: true
