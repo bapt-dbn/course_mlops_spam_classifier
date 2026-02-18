@@ -140,6 +140,7 @@ def train(c: Context, all_models: bool = False) -> None:
     )
 
     c.run("docker compose restart api", pty=PTY)
+    _wait_for_service(c, "http://localhost:8000/api/v1/health", "API")
     print("Model trained and API restarted.")
 
 
