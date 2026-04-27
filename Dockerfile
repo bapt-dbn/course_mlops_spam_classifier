@@ -1,5 +1,5 @@
-FROM python:3.12-slim AS builder
-COPY --from=ghcr.io/astral-sh/uv:0.10.3 /uv /uvx /bin/
+FROM python:3.14-slim AS builder
+COPY --from=ghcr.io/astral-sh/uv:0.11.8 /uv /uvx /bin/
 
 WORKDIR /app
 
@@ -14,7 +14,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     --no-dev \
     --no-install-project
 
-FROM python:3.12-slim
+FROM python:3.14-slim
 
 RUN addgroup --system peepouser && \
     adduser --system peepouser && \
