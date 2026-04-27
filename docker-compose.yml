@@ -28,7 +28,7 @@ services:
       - mlops-network
 
   mlflow:
-    image: ghcr.io/mlflow/mlflow:v3.9.0
+    image: ghcr.io/mlflow/mlflow:v3.11.1
     container_name: mlops-mlflow
     ports:
       - "5001:5001"
@@ -59,7 +59,7 @@ services:
       - mlops-network
 
   postgres:
-    image: postgres:18.2-alpine
+    image: postgres:18.3-alpine
     container_name: mlops-postgres
     ports:
       - "5432:5432"
@@ -78,7 +78,7 @@ services:
       - mlops-network
 
   postgres-init:
-    image: postgres:18.2-alpine
+    image: postgres:18.3-alpine
     container_name: mlops-postgres-init
     depends_on:
       postgres:
